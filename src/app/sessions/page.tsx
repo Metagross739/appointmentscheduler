@@ -1,8 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
-
+import { Session } from "../lib/service";
 export default function SessionsPage() {
-  const [sessions, setSessions] = useState([]);
+  const [sessions, setSessions] = useState<Session[]>([]);
 
   useEffect(() => {
     const stored = localStorage.getItem("sessions");

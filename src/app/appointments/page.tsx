@@ -2,17 +2,24 @@
 import { useEffect, useState } from "react";
 import { appointmentsArray } from "../lib/service";
 
+type Appointment = {
+  doctor: string;
+  patient: string;
+  time: string;
+  sessionType: string;
+};
+
 const AppointmentsPage = () => {
-  const [appointments, setAppointments] = useState([]);
-  const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(true);
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [page, setPage] = useState<number>(1);
+  const [loading, setLoading] = useState<boolean>(true);
   const perPage = 10;
 
   useEffect(() => {
     const stored = localStorage.getItem("appointments");
 
     if (stored) {
-      setAppointments(JSON.parse(stored));
+      setAppointments(JSON.parse(stored) as Appointment[]);
     } else {
       localStorage.setItem("appointments", JSON.stringify(appointmentsArray));
       setAppointments(appointmentsArray);

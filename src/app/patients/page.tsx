@@ -1,9 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
-import { dummyPatients } from "../lib/service";
+import { dummyPatients, Patient } from "../lib/service";
 
 const PatientsPage = () => {
-  const [patients, setPatients] = useState([]);
+  const [patients, setPatients] = useState<Patient[]>([]);
   const [page, setPage] = useState(1);
   const perPage = 10;
 

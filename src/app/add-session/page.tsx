@@ -6,7 +6,9 @@ import {
   addNewAppointment,
   addNewPatient,
   dummyPatients,
+  Patient,
 } from "../lib/service";
+
 const doctors = ["Dr. Smith", "Dr. Johnson", "Dr. Lee"];
 const timeSlots = {
   Morning: ["08:00 AM", "08:30 AM", "09:00 AM"],
@@ -22,24 +24,30 @@ export default function AddSessionPage() {
   const [showSearch, setShowSearch] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [patientAdded, setPatientAdded] = useState(null);
+  const [patientAdded, setPatientAdded] = useState<Patient | null>(null);
   const [sameAsMobile, setSameAsMobile] = useState(false);
-  const [formData, setFormData] = useState({
+
+  const [formData, setFormData] = useState<Patient>({
     name: "",
     mobile: "",
-    whatsapp: "",
+    WhatsApp: "", // ✅ Capital 'W' and 'A'
     email: "",
     address: "",
   });
 
   const router = useRouter();
 
-  const handleFormChange = (e) => {
+  const handleFormChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     const { name, value } = e.target;
+
     setFormData((prev) => ({
       ...prev,
       [name]: value,
-      ...(name === "mobile" && sameAsMobile ? { whatsapp: value } : {}),
+      ...(name === "mobile" && sameAsMobile ? { Whatsapp: value } : {}),
     }));
   };
 
@@ -52,7 +60,7 @@ export default function AddSessionPage() {
   };
 
   const foundPatients = dummyPatients.filter((p) =>
-    p?.name.toLowerCase().includes(searchTerm.toLowerCase())
+    p.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleSchedule = () => {
@@ -62,7 +70,7 @@ export default function AddSessionPage() {
     }
     addNewAppointment({
       doctor: selectedDoctor,
-      patient: patientAdded?.name,
+      patient: patientAdded.name,
       time: selectedTime,
       sessionType: sessionType,
     });
@@ -82,6 +90,7 @@ export default function AddSessionPage() {
       <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-2xl space-y-6 overflow-y-auto max-h-[95vh]">
         <h1 className="text-2xl font-bold text-gray-800">Add Session</h1>
 
+        {/* Doctor selection */}
         <div className="overflow-hidden max-w-full">
           <label className="block font-medium mb-1">Select Doctor</label>
           <select
@@ -100,6 +109,7 @@ export default function AddSessionPage() {
           </select>
         </div>
 
+        {/* Time slots */}
         <div>
           <label className="block font-medium mb-1">Select Time Slot</label>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -112,9 +122,9 @@ export default function AddSessionPage() {
                       key={slot}
                       type="button"
                       onClick={() => setSelectedTime(slot)}
-                      className={`px-3 py-1 rounded-xl  border-[0.5px] ${
+                      className={`px-3 py-1 rounded-xl border-[0.5px] ${
                         selectedTime === slot
-                          ? "bg-purple-400 border-purple-400  text-white"
+                          ? "bg-purple-400 border-purple-400 text-white"
                           : "bg-white border-amber-500"
                       }`}
                     >
@@ -127,6 +137,7 @@ export default function AddSessionPage() {
           </div>
         </div>
 
+        {/* Patient Options */}
         <div className="flex flex-wrap gap-4">
           <button
             type="button"
@@ -150,6 +161,7 @@ export default function AddSessionPage() {
           </button>
         </div>
 
+        {/* Search */}
         {showSearch && (
           <div className="mt-4 space-y-2">
             <input
@@ -168,7 +180,7 @@ export default function AddSessionPage() {
                     setShowSearch(false);
                   }}
                 >
-                  {p?.name || "Alice"}
+                  {p.name || "Unnamed"}
                 </div>
               ))
             ) : (
@@ -188,13 +200,14 @@ export default function AddSessionPage() {
           </div>
         )}
 
+        {/* Add Patient Form */}
         {showAddForm && (
           <div className="space-y-3 border border-gray-300 shadow p-4 rounded bg-transparent">
             <input
               name="name"
               placeholder="Name"
               onChange={handleFormChange}
-              className="w-full border border-amber-400 focus:border-amber-500 focus:outline-none px-3 py-2 rounded-xl"
+              className="w-full border border-amber-400 px-3 py-2 rounded-xl"
             />
             <input
               name="mobile"
@@ -204,11 +217,11 @@ export default function AddSessionPage() {
                 if (sameAsMobile) {
                   setFormData((prev) => ({
                     ...prev,
-                    whatsapp: e.target.value,
+                    Whatsapp: e.target.value,
                   }));
                 }
               }}
-              className="w-full border border-amber-400 focus:border-amber-500 focus:outline-none px-3 py-2 rounded-xl"
+              className="w-full border border-amber-400 px-3 py-2 rounded-xl"
             />
             <div>
               <div className="flex items-center gap-2 mb-1">
@@ -216,14 +229,14 @@ export default function AddSessionPage() {
                 <label className="text-sm flex items-center gap-1">
                   <input
                     type="checkbox"
-                    className="accent-amber-500 focus:ring-0 focus:ring-amber-400"
+                    className="accent-amber-500"
                     checked={sameAsMobile}
                     onChange={(e) => {
                       setSameAsMobile(e.target.checked);
                       if (e.target.checked) {
                         setFormData((prev) => ({
                           ...prev,
-                          whatsapp: prev.mobile,
+                          Whatsapp: prev.mobile,
                         }));
                       }
                     }}
@@ -232,25 +245,25 @@ export default function AddSessionPage() {
                 </label>
               </div>
               <input
-                name="whatsapp"
+                name="Whatsapp"
                 placeholder="WhatsApp"
-                value={sameAsMobile ? formData.mobile : formData.whatsapp}
+                value={sameAsMobile ? formData.mobile : formData.WhatsApp}
                 onChange={handleFormChange}
                 disabled={sameAsMobile}
-                className="w-full border border-amber-400 focus:border-amber-500 focus:outline-none px-3 py-2 rounded-xl"
+                className="w-full border border-amber-400 px-3 py-2 rounded-xl"
               />
             </div>
             <input
               name="email"
               placeholder="Email"
               onChange={handleFormChange}
-              className="w-full border border-amber-400 focus:border-amber-500 focus:outline-none px-3 py-2 rounded-xl"
+              className="w-full border border-amber-400 px-3 py-2 rounded-xl"
             />
             <textarea
               name="address"
               placeholder="Address"
               onChange={handleFormChange}
-              className="w-full border border-amber-400 focus:border-amber-500 focus:outline-none px-3 py-2 rounded-xl"
+              className="w-full border border-amber-400 px-3 py-2 rounded-xl"
             />
             <button
               type="button"
@@ -262,6 +275,7 @@ export default function AddSessionPage() {
           </div>
         )}
 
+        {/* Selected Patient */}
         {patientAdded && (
           <div className="p-3 bg-gradient-to-br from-yellow-100 via-pink-200 to-purple-300 rounded">
             <p className="font-semibold">Selected Patient:</p>

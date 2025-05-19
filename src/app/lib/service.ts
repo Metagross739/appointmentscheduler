@@ -1,6 +1,29 @@
-// service.js or service.ts
+// service.ts
 
-export const dummyPatients = [
+export type Patient = {
+  name: string;
+  mobile: string;
+  WhatsApp: string;
+  email: string;
+  address: string;
+};
+
+export type Appointment = {
+  doctor: string;
+  patient: string;
+  time: string;
+  sessionType: string;
+};
+
+export type Session = {
+  name: string;
+  mobile: string;
+  date: string;
+  time: string;
+  sessionType: string;
+};
+
+export const dummyPatients: Patient[] = [
   {
     name: "Alice",
     mobile: "+9194553465222",
@@ -17,7 +40,7 @@ export const dummyPatients = [
   },
 ];
 
-export const appointmentsArray = [
+export const appointmentsArray: Appointment[] = [
   {
     doctor: "Dr Smith",
     patient: "Jhon Lee",
@@ -38,17 +61,17 @@ export const appointmentsArray = [
   },
 ];
 
-export const addNewPatient = (newPatient) => {
+export const addNewPatient = (newPatient: Patient): void => {
   const existing = localStorage.getItem("patients");
-  const patients = existing ? JSON.parse(existing) : [];
+  const patients: Patient[] = existing ? JSON.parse(existing) : [];
 
   patients.push(newPatient);
   localStorage.setItem("patients", JSON.stringify(patients));
 };
 
-export const addNewAppointment = (newAppointment) => {
+export const addNewAppointment = (newAppointment: Appointment): void => {
   const existing = localStorage.getItem("appointments");
-  const appointments = existing ? JSON.parse(existing) : [];
+  const appointments: Appointment[] = existing ? JSON.parse(existing) : [];
 
   appointments.push(newAppointment);
   localStorage.setItem("appointments", JSON.stringify(appointments));
