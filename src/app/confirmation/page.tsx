@@ -1,7 +1,9 @@
 "use client";
+
+import React, { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function ConfirmationPage() {
+function ConfirmationPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -29,7 +31,7 @@ export default function ConfirmationPage() {
           </p>
           <p>
             <strong>Session Type:</strong>{" "}
-            {sessionType === "in-person" ? "In-Person" : "Online"}
+            {sessionType.toLowerCase() === "in-person" ? "In-Person" : "Online"}
           </p>
         </div>
 
@@ -41,5 +43,13 @@ export default function ConfirmationPage() {
         </button>
       </div>
     </div>
+  );
+}
+
+export default function ConfirmationPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ConfirmationPageContent />
+    </Suspense>
   );
 }
